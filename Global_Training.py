@@ -68,8 +68,9 @@ def saveAllInCSV(putcmp,putmodel,node,epoch,companyName,EfficiencyToSave,Precisi
     FinalSave=np.array(FinalSave)
     FinalSave=FinalSave.transpose()
     
-    putfold=".\\"+putcmp+" 20\\"+putmodel+"\\"
+    putfold="/"+putcmp+" 20/"+putmodel+"/"
     path = putfold+'Results/Epoch_'+str(epoch)+'/Nodes_'+str(node)+'/'   # if folder doesn't exists then create new folder
+    import os
     if not os.path.exists(path):
         os.makedirs(path)  
     np.savetxt(path+'Nodes_'+str(node)+'_Epoch_'+str(epoch)+'_All_Efficiency_Of_Testing.csv',FinalSave, fmt='%.10f',delimiter=',', header='Momentum01,02,03,04,05,06,07,08,09')
@@ -119,14 +120,20 @@ def GiveFoldersAccordingToCustomChoice(putcmp,putmodel,putcompany,putcustom,puta
         putfoldername='/'+p3+'/'+p2+'/' 
 
     
-    putfold="/"+putcmp+" 20/"+putmodel+putfoldername
-    putfold_for_csv="/Dataset/"
+    putfold="./"+putcmp+" 20/"+putmodel+putfoldername
+    putfold_for_csv="./Dataset/"
     return putfold_for_csv,putfold,putinnu
 
 def get_one_year_filter_data(year,noofnodes,noofepoch,noofbatchsize,noofsplitinratio):
-    print(year+"\n--------")
+    #print(year+"\n--------")
     
+  
+    
+    #import os
+    #os.chdir("Stock-Trend-Prediction-Google-Colab")
     dataset= pd.read_csv(year+'.csv')
+    
+    
     #print(dataset.shape)
     num_dataset=np.array(dataset)
     bool_positive = (num_dataset[:,12] == 1)
@@ -332,7 +339,7 @@ def compute_effi(putmodelindex,putfoldername,putcustom,putoptimizer,putactivatio
     classifier.save_weights(nu+"Initial_Training_Assigned_ANNweight.h5")
     
     # Fitting the ANN to the Training set
-    classifier.fit(train_in, train_out,batch_size = noofbatchsize, epochs =noofepoch,verbose=1)      
+    classifier.fit(train_in, train_out,batch_size = noofbatchsize, epochs =noofepoch,verbose=0)      
     
     import time
     etime = int(round(time.time() * 1000))
@@ -392,8 +399,8 @@ add_epoch_gap=10
 
 Start_Epoch=10
 End_Epoch=10
-Start_Node=20
-End_Node=20
+Start_Node=10
+End_Node=10
 cmpindex=2
 modelindex=2    # 1 for random weights 2 for pearson 3 for pearson absolute 
 putcmp=['','Reliance','Infosys']   # Infosys and Reliance
@@ -435,7 +442,7 @@ putcustom=putcustomoptimizer
 #----------------------------------------------------
 #----------------------------------------------------
 
-
+print("Models Started")
 for one_epoch in range(Start_Epoch,End_Epoch+add_epoch_gap,add_epoch_gap): 
     for one_node in range(Start_Node,End_Node+10,10):  
         AllComputedEfficiency=[]
@@ -471,6 +478,10 @@ for one_epoch in range(Start_Epoch,End_Epoch+add_epoch_gap,add_epoch_gap):
             #print("\n "+putstr)
             
             
+            
+            print("--> Epoch "+str(one_epoch)+" Node "+str(one_node)+" MC "+str(one_mc*100))   
+                
+            
             AllComputedEfficiency.append(oneeffi)
             AllComputedPrecision.append(oneprecision)
             AllComputedRecall.append(onerecall)
@@ -479,12 +490,12 @@ for one_epoch in range(Start_Epoch,End_Epoch+add_epoch_gap,add_epoch_gap):
             AllTimeMM.append(putm)
             AllTimeSS.append(puts)
             AllTimeMS.append(putmilli)
-            
-            if(one_mc>0.9):
-                import webbrowser
-                url = "https://www.google.com/search?q=epoch "+str(one_epoch)+" node "+str(one_node)+" mc "+str(one_mc*100)+""   
-                #url="file:///D:/mini%20project/Cool/Remove%20AD%20Oc%20Final%20RUNS/runurl.html?q=epoch "+str(noofepoch[puti])+" node "+str(noofnodes[puti])+" mc "+str(putmc[puti]*100)+""
-                webbrowser.open(url)
-                #print(url)
         saveAllInCSV(gotcmp,gotmodel,one_node,one_epoch,stockname,AllComputedEfficiency,AllComputedPrecision,AllComputedRecall,AllComputedFMeasure,AllTimeHH,AllTimeMM,AllTimeSS,AllTimeMS)
         
+print("Done-----------Done-------------Done")
+print("---------------------------------------")
+print("---------------------------------------")
+print("-------------"+gotcmp+"--------------------------")
+print("-------------"+gotmodel+"--------------------------")
+print("--------Epoch--"+str(Start_Epoch)+" to "+str(End_Epoch)+"-----------------------------")
+print("--------Node--"+str(Start_Node)+" to "+str(End_Node)+"-----------------------------")
