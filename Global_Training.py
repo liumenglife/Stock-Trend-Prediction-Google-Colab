@@ -119,8 +119,8 @@ def GiveFoldersAccordingToCustomChoice(putcmp,putmodel,putcompany,putcustom,puta
         putfoldername='/'+p3+'/'+p2+'/' 
 
     
-    putfold=".\\"+putcmp+" 20\\"+putmodel+putfoldername
-    putfold_for_csv="\\Dataset\\"
+    putfold="/"+putcmp+" 20/"+putmodel+putfoldername
+    putfold_for_csv="/Dataset/"
     return putfold_for_csv,putfold,putinnu
 
 def get_one_year_filter_data(year,noofnodes,noofepoch,noofbatchsize,noofsplitinratio):
