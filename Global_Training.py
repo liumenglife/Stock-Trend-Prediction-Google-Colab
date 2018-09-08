@@ -68,13 +68,18 @@ def saveAllInCSV(putcmp,putmodel,node,epoch,companyName,EfficiencyToSave,Precisi
     FinalSave=np.array(FinalSave)
     FinalSave=FinalSave.transpose()
     
-    putfold="/"+putcmp+" 20/"+putmodel+"/"
+    
+    putfold='./'+putcmp+' 20/'+putmodel+'/'
+    
+    print(putfold)
     path = putfold+'Results/Epoch_'+str(epoch)+'/Nodes_'+str(node)+'/'   # if folder doesn't exists then create new folder
+    print(path)
     import os
     if not os.path.exists(path):
         os.makedirs(path)  
+        
     np.savetxt(path+'Nodes_'+str(node)+'_Epoch_'+str(epoch)+'_All_Efficiency_Of_Testing.csv',FinalSave, fmt='%.10f',delimiter=',', header='Momentum01,02,03,04,05,06,07,08,09')
-    
+    print("working or not")
     
 
 def savemodel(stime,etime,allnu,nu,onecsvfile,onecm,oneeffi,noofnodes,noofepoch,noofbatchsize,noofsplitinratio):    
@@ -119,15 +124,15 @@ def GiveFoldersAccordingToCustomChoice(putcmp,putmodel,putcompany,putcustom,puta
             putinnu='_LR_NotDefine'+'MC_NotDefine_'+'SR1to'+str(noofsplitinratio)+'_BSZ'+str(noofbatchsize)
         putfoldername='/'+p3+'/'+p2+'/' 
 
-    
+
     putfold="./"+putcmp+" 20/"+putmodel+putfoldername
+    print("Made folder : "+putfold)
     putfold_for_csv="./Dataset/"
+    
     return putfold_for_csv,putfold,putinnu
 
 def get_one_year_filter_data(year,noofnodes,noofepoch,noofbatchsize,noofsplitinratio):
     #print(year+"\n--------")
-    
-  
     
     #import os
     #os.chdir("Stock-Trend-Prediction-Google-Colab")
@@ -393,16 +398,16 @@ def compute_effi(putmodelindex,putfoldername,putcustom,putoptimizer,putactivatio
 #noofnodes=[]
 #putmc=[]
 #
-add_epoch_gap=10
+add_epoch_gap=1000
 
 
 
-Start_Epoch=10
-End_Epoch=10
+Start_Epoch=1000
+End_Epoch=5000
 Start_Node=10
-End_Node=10
-cmpindex=2
-modelindex=2    # 1 for random weights 2 for pearson 3 for pearson absolute 
+End_Node=100
+cmpindex=1
+modelindex=3    # 1 for random weights 2 for pearson 3 for pearson absolute 
 putcmp=['','Reliance','Infosys']   # Infosys and Reliance
 putcmp_stockname=['','RELIANCEEQN','INFYEQN']
 putmodel=['','Random Weights','Pearson Weights','Pearson Weights ABSOLUTE']
@@ -479,7 +484,7 @@ for one_epoch in range(Start_Epoch,End_Epoch+add_epoch_gap,add_epoch_gap):
             
             
             
-            print("--> Epoch "+str(one_epoch)+" Node "+str(one_node)+" MC "+str(one_mc*100))   
+            print("--> Completed -- Epoch "+str(one_epoch)+" Node "+str(one_node)+" MC "+str(one_mc*100))   
                 
             
             AllComputedEfficiency.append(oneeffi)
@@ -490,6 +495,8 @@ for one_epoch in range(Start_Epoch,End_Epoch+add_epoch_gap,add_epoch_gap):
             AllTimeMM.append(putm)
             AllTimeSS.append(puts)
             AllTimeMS.append(putmilli)
+            
+        #print("call save all")
         saveAllInCSV(gotcmp,gotmodel,one_node,one_epoch,stockname,AllComputedEfficiency,AllComputedPrecision,AllComputedRecall,AllComputedFMeasure,AllTimeHH,AllTimeMM,AllTimeSS,AllTimeMS)
         
 print("Done-----------Done-------------Done")
