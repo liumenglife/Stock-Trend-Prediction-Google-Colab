@@ -68,18 +68,16 @@ def saveAllInCSV(putcmp,putmodel,node,epoch,companyName,EfficiencyToSave,Precisi
     FinalSave=np.array(FinalSave)
     FinalSave=FinalSave.transpose()
     
-    
     putfold='./'+putcmp+' 20/'+putmodel+'/'
-    
-    print(putfold)
     path = putfold+'Results/Epoch_'+str(epoch)+'/Nodes_'+str(node)+'/'   # if folder doesn't exists then create new folder
-    print(path)
+    print("Made folder : "+putfold)
+    print("Made folder : "+path)
+    
     import os
     if not os.path.exists(path):
         os.makedirs(path)  
         
     np.savetxt(path+'Nodes_'+str(node)+'_Epoch_'+str(epoch)+'_All_Efficiency_Of_Testing.csv',FinalSave, fmt='%.10f',delimiter=',', header='Momentum01,02,03,04,05,06,07,08,09')
-    print("working or not")
     
 
 def savemodel(stime,etime,allnu,nu,onecsvfile,onecm,oneeffi,noofnodes,noofepoch,noofbatchsize,noofsplitinratio):    
