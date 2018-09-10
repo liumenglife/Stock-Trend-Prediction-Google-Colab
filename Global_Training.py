@@ -399,17 +399,20 @@ def compute_effi(putmodelindex,putfoldername,putcustom,putoptimizer,putactivatio
 add_epoch_gap=1000
 
 
+import sys
 
-Start_Epoch=4000
-End_Epoch=4000
-Start_Node=10
-End_Node=50
-cmpindex=1
-modelindex=3    # 1 for random weights 2 for pearson 3 for pearson absolute 
+gotParameters=sys.argv
+cmpindex=gotParameters[0]   # 1 for Reliance 2 for Infosys
+modelindex=gotParameters[1]    # 1 for random weights 2 for pearson 3 for pearson absolute 
 putcmp=['','Reliance','Infosys']   # Infosys and Reliance
 putcmp_stockname=['','RELIANCEEQN','INFYEQN']
 putmodel=['','Random Weights','Pearson Weights','Pearson Weights ABSOLUTE']
 
+
+Start_Epoch=gotParameters[2]
+End_Epoch=gotParameters[3]
+Start_Node=gotParameters[4]
+End_Node=gotParameters[5]
 
 #----------------------------------------------------
 #-----------------------MAIN CLOSE-------------------
