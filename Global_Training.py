@@ -400,10 +400,10 @@ add_epoch_gap=1000
 
 
 
-Start_Epoch=3000
-End_Epoch=3000
+Start_Epoch=4000
+End_Epoch=4000
 Start_Node=10
-End_Node=100
+End_Node=50
 cmpindex=1
 modelindex=3    # 1 for random weights 2 for pearson 3 for pearson absolute 
 putcmp=['','Reliance','Infosys']   # Infosys and Reliance
