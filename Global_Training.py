@@ -407,17 +407,17 @@ def compute_effi(putmodelindex,putfoldername,putcustom,putoptimizer,putactivatio
 # parameter  6 for Ending Node
 import sys
 gotParameters=sys.argv
-cmpindex=str(gotParameters[0])   # 1 for Reliance 2 for Infosys
-modelindex=str(gotParameters[1])    # 1 for random weights 2 for pearson 3 for pearson absolute 
+cmpindex=int(gotParameters[0])   # 1 for Reliance 2 for Infosys
+modelindex=int(gotParameters[1])    # 1 for random weights 2 for pearson 3 for pearson absolute 
 putcmp=['','Reliance','Infosys']   # Reliance, Infosys
 putcmp_stockname=['','RELIANCEEQN','INFYEQN']
 putmodel=['','Random Weights','Pearson Weights','Pearson Weights ABSOLUTE']
 
 
-Start_Epoch=str(gotParameters[2])
-End_Epoch=str(gotParameters[3])
-Start_Node=str(gotParameters[4])
-End_Node=str(gotParameters[5])
+Start_Epoch=int(gotParameters[2])
+End_Epoch=int(gotParameters[3])
+Start_Node=int(gotParameters[4])
+End_Node=int(gotParameters[5])
 
 #----------------------------------------------------
 #-----------------------MAIN CLOSE-------------------
