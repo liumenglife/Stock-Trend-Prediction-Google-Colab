@@ -396,23 +396,28 @@ def compute_effi(putmodelindex,putfoldername,putcustom,putoptimizer,putactivatio
 #noofnodes=[]
 #putmc=[]
 #
-add_epoch_gap=1000
 
 
+
+# parameter  1 for Company Selection      #  1 for Reliance,  2 for Infosys
+# parameter  2 for Model Selection        #  1 for Random weights, 2 for Pearson, 3 for Pearson absolute 
+# parameter  3 for Starting Epoch
+# parameter  4 for Ending Epoch
+# parameter  5 for Starting Node
+# parameter  6 for Ending Node
 import sys
-
 gotParameters=sys.argv
-cmpindex=gotParameters[0]   # 1 for Reliance 2 for Infosys
-modelindex=gotParameters[1]    # 1 for random weights 2 for pearson 3 for pearson absolute 
+cmpindex=str(gotParameters[0])   # 1 for Reliance 2 for Infosys
+modelindex=str(gotParameters[1])    # 1 for random weights 2 for pearson 3 for pearson absolute 
 putcmp=['','Reliance','Infosys']   # Reliance, Infosys
 putcmp_stockname=['','RELIANCEEQN','INFYEQN']
 putmodel=['','Random Weights','Pearson Weights','Pearson Weights ABSOLUTE']
 
 
-Start_Epoch=gotParameters[2]
-End_Epoch=gotParameters[3]
-Start_Node=gotParameters[4]
-End_Node=gotParameters[5]
+Start_Epoch=str(gotParameters[2])
+End_Epoch=str(gotParameters[3])
+Start_Node=str(gotParameters[4])
+End_Node=str(gotParameters[5])
 
 #----------------------------------------------------
 #-----------------------MAIN CLOSE-------------------
@@ -434,7 +439,7 @@ stockname=putcmp_stockname[cmpindex]
 #            putmc.append(one_mc)
     
 
-
+add_epoch_gap=10
 noofbatchsize=10 #BSZ BatchSize
 noofsplitinratio=2 #SR SplitInRatio
 putlr=0.1
