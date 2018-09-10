@@ -418,6 +418,7 @@ Start_Epoch=int(gotParameters[2])
 End_Epoch=int(gotParameters[3])
 Start_Node=int(gotParameters[4])
 End_Node=int(gotParameters[5])
+add_epoch_gap=int(gotParameters[6])
 
 #----------------------------------------------------
 #-----------------------MAIN CLOSE-------------------
@@ -439,7 +440,6 @@ stockname=putcmp_stockname[cmpindex]
 #            putmc.append(one_mc)
     
 
-add_epoch_gap=10
 noofbatchsize=10 #BSZ BatchSize
 noofsplitinratio=2 #SR SplitInRatio
 putlr=0.1
