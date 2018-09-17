@@ -388,16 +388,10 @@ def compute_effi(putmodelindex,putfoldername,putcustom,putoptimizer,putactivatio
     
 
 #----------------------------------------------------
+#----------------------------------------------------
 #-----------------------MAIN-------------------------
 #----------------------------------------------------
 #----------------------------------------------------
-#csvfiles=[]
-#noofepoch=[]
-#noofnodes=[]
-#putmc=[]
-#
-
-
 
 # parameter  1 for Company Selection      #  1 for Reliance,  2 for Infosys
 # parameter  2 for Model Selection        #  1 for Random weights, 2 for Pearson, 3 for Pearson absolute 
@@ -406,6 +400,7 @@ def compute_effi(putmodelindex,putfoldername,putcustom,putoptimizer,putactivatio
 # parameter  5 for Starting Node
 # parameter  6 for Ending Node
 # parameter  7 for add_epoch_gap
+
 import sys
 gotParameters=sys.argv
 cmpindex=int(gotParameters[1])   # 1 for Reliance 2 for Infosys
@@ -421,6 +416,8 @@ Start_Node=int(gotParameters[5])
 End_Node=int(gotParameters[6])
 add_epoch_gap=int(gotParameters[7])
 
+
+#----------------------------------------------------
 #----------------------------------------------------
 #-----------------------MAIN CLOSE-------------------
 #----------------------------------------------------
