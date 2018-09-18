@@ -81,7 +81,7 @@ mode=1    # MODE 0 FOR Training # MODE 1 FOR Testing #  MODE 2 FOR AVG
 putnode=10
 modelindex=3    # 1 for random weights 2 for pearson 3 for pearson absolute 
 cmpindex=1
-putcmp=['','Reliance','Infosys']   # Infosys and Reliance
+putcmp=['','Reliance','Infosys','SBI','SunPharma']   # Reliance, Infosys
 putmodel=['','Random Weights','Pearson Weights','Pearson Weights ABSOLUTE']
 
 

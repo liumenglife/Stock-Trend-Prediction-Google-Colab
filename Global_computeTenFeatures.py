@@ -139,7 +139,7 @@ def getupdown(dataset):
 
 def compute_mom_ado_fun(datafile):
     #print("\n\n"+datafile+"\n")
-    dataset= pd.read_csv(datafile)
+    dataset= pd.read_csv('.//Dataset//'+datafile)
     filtered_dataset=dataset.iloc[:,3:]
     output_open_price=dataset.iloc[:,4:5]
     output_open_price_dataset=dataset.iloc[:,4:5]
@@ -189,7 +189,7 @@ def compute_mom_ado_fun(datafile):
 
 
 def compute_stockstat(csvfile):
-    dataset=pd.read_csv(csvfile)
+    dataset=pd.read_csv('.//Dataset//'+csvfile)
     dataset.columns = ['Symbol','Series','Date','Prev Close','	open','high','low','Last Price','close','Average Price','Total Traded Quantity','Turnover','No. of Trades','Deliverable Qty','% Dly Qt to Traded Qty']
     stock = StockDataFrame.retype(dataset)    
     
@@ -232,9 +232,11 @@ def compute_stockstat(csvfile):
 #------------------------------------
 #------------------------------------
 #------------------------------------
-#csvfiles=['INFYEQN','RELIANCEEQN']
+#csvfiles=['INFYEQN']
 #csvfiles=['RELIANCEEQN']
-csvfiles=['INFYEQN']
+    
+csvfiles=['SUNPHARMAEQN']
+#csvfiles=['SBINEQN']
 #------------------------------------
 #------------------------------------
 #------------------------------------
@@ -269,5 +271,5 @@ for onecsvfile in csvfiles:
         df_result = pd.concat([df, df_mad], axis=1)
         
         df_result=df_result.iloc[10:,:]
-        df_result.to_csv('computed_feature_'+year+'.csv', sep=',',index=False) 
+        df_result.to_csv('.//Dataset//'+'computed_feature_'+year+'.csv', sep=',',index=False) 
     

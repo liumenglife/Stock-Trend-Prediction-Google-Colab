@@ -399,7 +399,7 @@ def compute_effi(putmodelindex,putfoldername,putcustom,putoptimizer,putactivatio
 
 
 
-# parameter  1 for Company Selection      #  1 for Reliance,  2 for Infosys
+# parameter  1 for Company Selection      #  1 for Reliance,  2 for Infosys  3 for SBI   4 for SunPharma
 # parameter  2 for Model Selection        #  1 for Random weights, 2 for Pearson, 3 for Pearson absolute 
 # parameter  3 for Starting Epoch
 # parameter  4 for Ending Epoch
@@ -410,8 +410,8 @@ import sys
 gotParameters=sys.argv
 cmpindex=int(gotParameters[1])   # 1 for Reliance 2 for Infosys
 modelindex=int(gotParameters[2])    # 1 for random weights 2 for pearson 3 for pearson absolute 
-putcmp=['','Reliance','Infosys']   # Reliance, Infosys
-putcmp_stockname=['','RELIANCEEQN','INFYEQN']
+putcmp=['','Reliance','Infosys','SBI','SunPharma']   # Reliance, Infosys
+putcmp_stockname=['','RELIANCEEQN','INFYEQN','SBINEQN','SUNPHARMAEQN']
 putmodel=['','Random Weights','Pearson Weights','Pearson Weights ABSOLUTE']
 
 
