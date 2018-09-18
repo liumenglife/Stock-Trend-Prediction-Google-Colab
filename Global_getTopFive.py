@@ -76,10 +76,10 @@ def compute_all_results(mode,noofepoch,noofnode,fold):
 noofepoch=[1000,2000,3000,4000,5000,6000,7000,8000,9000,10000]
 #noofepoch=[1000,2000,3000,4000,5000,6000,9000]
 
-getTop=450
+getTop=5
 mode=1    # MODE 0 FOR Training # MODE 1 FOR Testing #  MODE 2 FOR AVG   
 putnode=10
-modelindex=2    # 1 for random weights 2 for pearson 3 for pearson absolute 
+modelindex=3    # 1 for random weights 2 for pearson 3 for pearson absolute 
 cmpindex=1
 putcmp=['','Reliance','Infosys']   # Infosys and Reliance
 putmodel=['','Random Weights','Pearson Weights','Pearson Weights ABSOLUTE']
@@ -148,6 +148,11 @@ for i in range(getTop):
     #f.append(putstr)
     #putnum='%.3f' % result[xi][xj]
     putnum=str(result[xi][xj])
+    #f.append(noofepoch[epochx])
+    #f.append(noofnode[nodex])
+    #f.append(str((xj+1)/10))
+    putstr="  "+str(noofepoch[epochx])+" : "+str(noofnode[nodex])+"  : "+str((xj+1)/10)
+    f.append(putstr)
     f.append(putnum)
     ans.append(f)
     print(putstr)
