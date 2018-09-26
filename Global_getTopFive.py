@@ -79,9 +79,9 @@ noofepoch=[1000,2000,3000,4000,5000,6000,7000,8000,9000,10000]
 getTop=5
 mode=1    # MODE 0 FOR Training # MODE 1 FOR Testing #  MODE 2 FOR AVG   
 putnode=10
-modelindex=3    # 1 for random weights 2 for pearson 3 for pearson absolute 
-cmpindex=1
-putcmp=['','Reliance','Infosys','SBI','SunPharma']   # Reliance, Infosys
+modelindex=1    # 1 for random weights 2 for pearson 3 for pearson absolute 
+cmpindex=4
+putcmp=['','Reliance','Infosys','SBI','SunPharma','HDFC','DrReddy']   # Reliance, Infosy
 putmodel=['','Random Weights','Pearson Weights','Pearson Weights ABSOLUTE']
 
 

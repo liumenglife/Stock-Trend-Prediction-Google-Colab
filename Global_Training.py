@@ -410,8 +410,8 @@ import sys
 gotParameters=sys.argv
 cmpindex=int(gotParameters[1])   # 1 for Reliance 2 for Infosys
 modelindex=int(gotParameters[2])    # 1 for random weights 2 for pearson 3 for pearson absolute 
-putcmp=['','Reliance','Infosys','SBI','SunPharma']   # Reliance, Infosys
-putcmp_stockname=['','RELIANCEEQN','INFYEQN','SBINEQN','SUNPHARMAEQN']
+putcmp=['','Reliance','Infosys','SBI','SunPharma','HDFC','DrReddy']   # Reliance, Infosy
+putcmp_stockname=['','RELIANCEEQN','INFYEQN','SBINEQN','SUNPHARMAEQN','HDFCEQN','DRREDDYEQN']
 putmodel=['','Random Weights','Pearson Weights','Pearson Weights ABSOLUTE']
 
 

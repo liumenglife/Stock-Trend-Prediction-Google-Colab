@@ -232,11 +232,10 @@ def compute_stockstat(csvfile):
 #------------------------------------
 #------------------------------------
 #------------------------------------
-#csvfiles=['INFYEQN']
-#csvfiles=['RELIANCEEQN']
-    
-csvfiles=['SUNPHARMAEQN']
-#csvfiles=['SBINEQN']
+yearToStart=2008
+#csvfiles=['RELIANCEEQN','INFYEQN','SBINEQN','SUNPHARMAEQN','HDFCEQN','DRREDDYEQN']
+csvfiles=['RELIANCEEQN','INFYEQN','HDFCEQN','DRREDDYEQN']
+
 #------------------------------------
 #------------------------------------
 #------------------------------------
@@ -246,7 +245,7 @@ for onecsvfile in csvfiles:
     peryearmax=[]
     peryearmin=[]
     
-    initial=2003
+    initial=yearToStart
     for i in range(10):
         putstr='01-01-'+str(initial)+'-TO-31-12-'+str(initial)+onecsvfile
         #print(putstr)
@@ -272,4 +271,6 @@ for onecsvfile in csvfiles:
         
         df_result=df_result.iloc[10:,:]
         df_result.to_csv('.//Dataset//'+'computed_feature_'+year+'.csv', sep=',',index=False) 
-    
+print("Done-----------Done-------------Done")
+print("--------------------------------------------------------------------------------------")
+print("--------------------------------------------------------------------------------------")
