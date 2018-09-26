@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # -*- coding: utf-8 -*-
 """
 Created on Tue May  1 18:32:44 2018
@@ -173,3 +174,6 @@ elif(mode==1):
 else:
     ans.to_csv(putfold+'/All_Results/Top_'+str(getTop)+'_Of_Both.csv', sep=',',index=False) 
     
+=======
+#running
+>>>>>>> b9d401b7f29b6fed5e9ae68fb8c8e7c143e3af7f
