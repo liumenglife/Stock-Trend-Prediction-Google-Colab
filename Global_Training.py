@@ -171,10 +171,10 @@ def get_one_year_filter_data(year,noofnodes,noofepoch,noofbatchsize,noofsplitinr
     return one_train_in,one_test_in,one_train_out,one_test_out
 
 
-def get_dataset(putfold_for_csv,stockname,onecsvfile,noofnodes,noofepoch,noofbatchsize,noofsplitinratio):
+def get_dataset(putfold_for_csv,stockname,onecsvfile,noofnodes,noofepoch,noofbatchsize,noofsplitinratio,putyear):
     #sharetype='EQN'
     years=[]
-    initial=2003
+    initial=putyear
     for i in range(10):
         if(stockname=='NIFTY'):
             putstr=putfold_for_csv+'computed_feature_data '+str(initial)
@@ -420,6 +420,7 @@ End_Epoch=int(gotParameters[4])
 Start_Node=int(gotParameters[5])
 End_Node=int(gotParameters[6])
 add_epoch_gap=int(gotParameters[7])
+putyear=int(gotParameters[8])
 
 #----------------------------------------------------
 #-----------------------MAIN CLOSE-------------------
@@ -478,7 +479,7 @@ for one_epoch in range(Start_Epoch,End_Epoch+add_epoch_gap,add_epoch_gap):
             
             
             #print(csvfiles[puti])
-            train_in,test_in,train_out,test_out=get_dataset(putfold_for_csv,stockname,stockname,one_node,one_epoch,noofbatchsize,noofsplitinratio)
+            train_in,test_in,train_out,test_out=get_dataset(putfold_for_csv,stockname,stockname,one_node,one_epoch,noofbatchsize,noofsplitinratio,putyear)
             onecm,oneeffi,oneprecision,onerecall,onef_measure,final_ANNweight,Assigned_ANNweight,stime,etime,normalized_train_in,normalized_test_in,final_train_in,corel_full_matrix=compute_effi(modelindex,putfoldername,putcustom,putoptimizer,putactivation,putlr,one_mc,stockname,allnu,nu,train_in,test_in,train_out,test_out,one_node,one_epoch,noofbatchsize,noofsplitinratio)
             #print("\n\n"+csvfiles[puti])
             #print(onecm)
