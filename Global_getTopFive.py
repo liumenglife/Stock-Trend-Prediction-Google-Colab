@@ -76,11 +76,16 @@ def compute_all_results(mode,noofepoch,noofnode,fold):
 noofepoch=[1000,2000,3000,4000,5000,6000,7000,8000,9000,10000]
 #noofepoch=[1000,2000,3000,4000,5000,6000,9000]
 
+#-------------------------------------------
+#-------------------------------------------
 getTop=5
 mode=1    # MODE 0 FOR Training # MODE 1 FOR Testing #  MODE 2 FOR AVG   
 putnode=10
 modelindex=1    # 1 for random weights 2 for pearson 3 for pearson absolute 
 cmpindex=4
+putyear=2003    ## 2003 or 2008
+#-------------------------------------------
+#-------------------------------------------
 putcmp=['','Reliance','Infosys','SBI','SunPharma','HDFC','DrReddy']   # Reliance, Infosy
 putmodel=['','Random Weights','Pearson Weights','Pearson Weights ABSOLUTE']
 
@@ -93,7 +98,7 @@ putmodel=['','Random Weights','Pearson Weights','Pearson Weights ABSOLUTE']
 #-------------------------------------------
 
 
-putfold=".\\"+putcmp[cmpindex]+" 20\\"+putmodel[modelindex]
+putfold='.\\'+str(putyear)+'\\'+putcmp[cmpindex]+'\\'+putmodel[modelindex]
 noofnode=[]
    
 
@@ -173,6 +178,3 @@ elif(mode==1):
 else:
     ans.to_csv(putfold+'/All_Results/Top_'+str(getTop)+'_Of_Both.csv', sep=',',index=False) 
     
-print("Done-----------Done-------------Done")
-print("--------------------------------------------------------------------------------------")
-print("--------------------------------------------------------------------------------------")
