@@ -44,7 +44,7 @@ def get_run_time(stime,etime):
     return putstr,puth,putm,puts,putmilli,allmilli
 
 
-def saveAllInCSV(putcmp,putmodel,node,epoch,companyName,EfficiencyToSave,PrecisionToSave,RecallToSave,FMeasureToSave,HHToSave,MMToSave,SSToSave,MSToSave,AllMSToSave):
+def saveAllInCSV(putyear,putcmp,putmodel,node,epoch,companyName,EfficiencyToSave,PrecisionToSave,RecallToSave,FMeasureToSave,HHToSave,MMToSave,SSToSave,MSToSave,AllMSToSave):
     EfficiencyToSave=np.array(EfficiencyToSave)
     PrecisionToSave=np.array(PrecisionToSave)
     RecallToSave=np.array(RecallToSave)
@@ -70,7 +70,7 @@ def saveAllInCSV(putcmp,putmodel,node,epoch,companyName,EfficiencyToSave,Precisi
     FinalSave=np.array(FinalSave)
     FinalSave=FinalSave.transpose()
     
-    putfold='./'+putcmp+' 20/'+putmodel+'/'
+    putfold='./'+str(putyear)+'/'+putcmp+'/'+putmodel+'/'
     path = putfold+'Results/Epoch_'+str(epoch)+'/Nodes_'+str(node)+'/'   # if folder doesn't exists then create new folder
     print("Made folder : "+putfold)
     print("Made folder : "+path)
@@ -98,10 +98,10 @@ def savemodel(stime,etime,allnu,nu,onecsvfile,onecm,oneeffi,noofnodes,noofepoch,
     saveFile.close()
 
 
-def GiveFoldersAccordingToCustomChoice(putcmp,putmodel,putcompany,putcustom,putactivation,putoptimizer,putlr,putmc,noofsplitinratio,noofbatchsize,noofnodes,noofepoch):
+def GiveFoldersAccordingToCustomChoice(putyear,putcmp,putmodel,putcompany,putcustom,putactivation,putoptimizer,putlr,putmc,noofsplitinratio,noofbatchsize,noofnodes,noofepoch):
     
     # NodesAndEpochs  or   OptimizerMethod   or Company  
-    p2='Details_Epoch'+str(noofepoch)+'/Node'+str(noofnodes)+'/MC'+str(putmc*100)  
+    p2='Epoch'+str(noofepoch)+'/Node'+str(noofnodes)+'/MC'+str(putmc*100)  
     #p2='Updated_Node'+str(noofnodes)+'_Epoch'+str(noofepoch)  
     p3='ANN'
     
@@ -125,7 +125,7 @@ def GiveFoldersAccordingToCustomChoice(putcmp,putmodel,putcompany,putcustom,puta
         putfoldername='/'+p3+'/'+p2+'/' 
 
 
-    putfold="./"+putcmp+" 20/"+putmodel+putfoldername
+    putfold='./'+str(putyear)+'/'+putcmp+'/'+putmodel+putfoldername
     print("Made folder : "+putfold)
     putfold_for_csv="./Dataset/"
     
@@ -147,7 +147,7 @@ def get_one_year_filter_data(year,noofnodes,noofepoch,noofbatchsize,noofsplitinr
     negative_dataset=dataset[bool_negative]
     #print(positive_dataset.shape)
     #print(negative_dataset.shape)
-    positive_dataset_input=positive_dataset.iloc[:,1:12]
+    positive_dataset_input=positive_dataset.iloc[:,0:12]
     positive_dataset_output=positive_dataset.iloc[:,12:]
     #print(positive_dataset_input.shape)
     #print(positive_dataset_output.shape)
@@ -156,7 +156,7 @@ def get_one_year_filter_data(year,noofnodes,noofepoch,noofbatchsize,noofsplitinr
     #print(year)
     #print(pos_train_in.shape)
     #print(pos_test_in.shape)
-    negative_dataset_input=negative_dataset.iloc[:,1:12]
+    negative_dataset_input=negative_dataset.iloc[:,0:12]
     negative_dataset_output=negative_dataset.iloc[:,12:]
     #print(negative_dataset_input.shape)
     #print(negative_dataset_output.shape)
@@ -178,10 +178,7 @@ def get_dataset(putfold_for_csv,stockname,onecsvfile,noofnodes,noofepoch,noofbat
     years=[]
     initial=putyear
     for i in range(10):
-        if(stockname=='NIFTY'):
-            putstr=putfold_for_csv+'computed_feature_data '+str(initial)
-        else:
-            putstr=putfold_for_csv+'computed_feature_01-01-'+str(initial)+'-TO-31-12-'+str(initial)+onecsvfile
+        putstr=putfold_for_csv+'computed_feature_01-01-'+str(initial)+'-TO-31-12-'+str(initial)+onecsvfile
         
         #print(putstr)
         years.append(putstr)
@@ -190,7 +187,7 @@ def get_dataset(putfold_for_csv,stockname,onecsvfile,noofnodes,noofepoch,noofbat
     all_train_in,all_test_in,all_train_out,all_test_out=get_one_year_filter_data(years[0],noofnodes,noofepoch,noofbatchsize,noofsplitinratio)
     #print(all_train_out.shape)
     for year in range(1,len(years)):
-        #print(year)
+        #print(years[year])
         #print(neg_test_out)
         #print(neg_test_in)
         one_train_in,one_test_in,one_train_out,one_test_out=get_one_year_filter_data(years[year],noofnodes,noofepoch,noofbatchsize,noofsplitinratio)
@@ -216,6 +213,28 @@ def get_dataset(putfold_for_csv,stockname,onecsvfile,noofnodes,noofepoch,noofbat
     '''
     return all_train_in,all_test_in,all_train_out,all_test_out
     
+def save_data_mapping_with_dates(train_in,test_in,train_out,test_out):
+    #Completing Save
+    #all_train_out=np.concatenate([train_in, train_out])
+    tem_train_in=pd.DataFrame(train_in)
+    tem_test_in=pd.DataFrame(test_in)
+    tem_train_out=pd.DataFrame(train_out)
+    tem_test_out=pd.DataFrame(test_out)
+    
+    
+    all_train=pd.concat([tem_train_in, tem_train_out], axis=1)
+    all_test=pd.concat([tem_test_in, tem_test_out], axis=1)
+    putheaders=['date','close_10_sma','close_10_ema','kdjk_10','kdjd_10','macd','rsi_10','wr_10','cci_10','Momentum','ADOsc','OpenPrice','UpDown']
+    all_train.columns =putheaders
+    all_test.columns =putheaders
+    all_train.to_csv(putfoldername+'Mapped_Train_data_with_dates.csv',index=False)
+    all_test.to_csv(putfoldername+'Mapped_Test_data_with_dates.csv',index=False)
+    without_date_train_in=train_in[:,1:12]
+    without_date_test_in=test_in[:,1:12]
+    
+    return without_date_train_in,without_date_test_in,train_out,test_out
+    
+            
 
 def compute_effi(putmodelindex,putfoldername,putcustom,putoptimizer,putactivation,putlr,putmc,csvfile,allnu,nu,train_in,test_in,train_out,test_out,noofnodes,noofepoch,noofbatchsize,noofsplitinratio):
     
@@ -475,7 +494,7 @@ for one_epoch in range(Start_Epoch,End_Epoch+add_epoch_gap,add_epoch_gap):
         AllTimeAllMS=[]
         for one_mc in range(1,10,1):
             one_mc=one_mc/10
-            putfold_for_csv,putfoldername,putinnu=GiveFoldersAccordingToCustomChoice(gotcmp,gotmodel,stockname,putcustom,putactivation,putoptimizer,putlr,one_mc,noofsplitinratio,noofbatchsize,one_node,one_epoch)
+            putfold_for_csv,putfoldername,putinnu=GiveFoldersAccordingToCustomChoice(putyear,gotcmp,gotmodel,stockname,putcustom,putactivation,putoptimizer,putlr,one_mc,noofsplitinratio,noofbatchsize,one_node,one_epoch)
             
             #print(putfoldername)
             path = putfoldername   # if folder doesn't exists then create new folder
@@ -487,6 +506,7 @@ for one_epoch in range(Start_Epoch,End_Epoch+add_epoch_gap,add_epoch_gap):
             
             #print(csvfiles[puti])
             train_in,test_in,train_out,test_out=get_dataset(putfold_for_csv,stockname,stockname,one_node,one_epoch,noofbatchsize,noofsplitinratio,putyear)
+            train_in,test_in,train_out,test_out=save_data_mapping_with_dates(train_in,test_in,train_out,test_out)
             onecm,oneeffi,oneprecision,onerecall,onef_measure,final_ANNweight,Assigned_ANNweight,stime,etime,normalized_train_in,normalized_test_in,final_train_in,corel_full_matrix=compute_effi(modelindex,putfoldername,putcustom,putoptimizer,putactivation,putlr,one_mc,stockname,allnu,nu,train_in,test_in,train_out,test_out,one_node,one_epoch,noofbatchsize,noofsplitinratio)
             #print("\n\n"+csvfiles[puti])
             #print(onecm)
@@ -513,7 +533,7 @@ for one_epoch in range(Start_Epoch,End_Epoch+add_epoch_gap,add_epoch_gap):
             AllTimeAllMS.append(putallmilli)
             
         #print("call save all")
-        saveAllInCSV(gotcmp,gotmodel,one_node,one_epoch,stockname,AllComputedEfficiency,AllComputedPrecision,AllComputedRecall,AllComputedFMeasure,AllTimeHH,AllTimeMM,AllTimeSS,AllTimeMS,AllTimeAllMS)
+        saveAllInCSV(putyear,gotcmp,gotmodel,one_node,one_epoch,stockname,AllComputedEfficiency,AllComputedPrecision,AllComputedRecall,AllComputedFMeasure,AllTimeHH,AllTimeMM,AllTimeSS,AllTimeMS,AllTimeAllMS)
         
 print("Done-----------Done-------------Done")
 print("--------------------------------------------------------------------------------------")
@@ -522,5 +542,6 @@ print("----------------------------------"+gotcmp+"-----------------------------
 print("----------------------------------"+gotmodel+"----------------------------------------")
 print("-----------------Epoch--"+str(Start_Epoch)+" to "+str(End_Epoch)+"--------------------")
 print("-----------------Node--"+str(Start_Node)+" to "+str(End_Node)+"-----------------------")
+print("-----------------Year--------------"+str(putyear)+"-----------------------------------")
 print("--------------------------------------------------------------------------------------")
 print("--------------------------------------------------------------------------------------")
