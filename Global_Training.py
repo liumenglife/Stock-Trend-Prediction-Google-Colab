@@ -32,6 +32,7 @@ import random
 
 def get_run_time(stime,etime):
     millis=etime-stime
+    allmilli=millis
     seconds=int(millis/1000)
     minutes=int(seconds/60)
     hours=int(minutes/60)
@@ -40,10 +41,10 @@ def get_run_time(stime,etime):
     puts=seconds%60
     putmilli=millis-(seconds*1000)
     putstr="Time to train -->   "+str(puth)+" Hours :  "+str(putm)+" Minutes : "+str(puts)+" Seconds : "+str(putmilli)+" Milliseconds"
-    return putstr,puth,putm,puts,putmilli
+    return putstr,puth,putm,puts,putmilli,allmilli
 
 
-def saveAllInCSV(putcmp,putmodel,node,epoch,companyName,EfficiencyToSave,PrecisionToSave,RecallToSave,FMeasureToSave,HHToSave,MMToSave,SSToSave,MSToSave):
+def saveAllInCSV(putcmp,putmodel,node,epoch,companyName,EfficiencyToSave,PrecisionToSave,RecallToSave,FMeasureToSave,HHToSave,MMToSave,SSToSave,MSToSave,AllMSToSave):
     EfficiencyToSave=np.array(EfficiencyToSave)
     PrecisionToSave=np.array(PrecisionToSave)
     RecallToSave=np.array(RecallToSave)
@@ -52,7 +53,7 @@ def saveAllInCSV(putcmp,putmodel,node,epoch,companyName,EfficiencyToSave,Precisi
     MMToSave=np.array(MMToSave)
     SSToSave=np.array(SSToSave)
     MSToSave=np.array(MSToSave)
-    
+    AllMSToSave=np.array(AllMSToSave)
     FinalSave=[]
     for i in range(9):
         temp=[]
@@ -64,6 +65,7 @@ def saveAllInCSV(putcmp,putmodel,node,epoch,companyName,EfficiencyToSave,Precisi
         temp.append(MMToSave[i])
         temp.append(SSToSave[i])
         temp.append(MSToSave[i])
+        temp.append(AllMSToSave[i])
         FinalSave.append(temp)    
     FinalSave=np.array(FinalSave)
     FinalSave=FinalSave.transpose()
@@ -90,7 +92,7 @@ def savemodel(stime,etime,allnu,nu,onecsvfile,onecm,oneeffi,noofnodes,noofepoch,
     saveFile.write("\n\n")
     saveFile.write("\n\t\tEfficiency : "+str(oneeffi)+"\n")
     saveFile.write("\n\n")
-    putstr,puth,putm,puts,putmilli=get_run_time(stime,etime)
+    putstr,puth,putm,puts,putmilli,putallmilli=get_run_time(stime,etime)
     saveFile.write("\n\t\t "+putstr+"\n")
     saveFile.write("\n\n--------------------------------------------------------------------------\n\n")
     saveFile.close()
@@ -288,10 +290,12 @@ def compute_effi(putmodelindex,putfoldername,putcustom,putoptimizer,putactivatio
     ##################################################
     ##################################################
     
-    if(putmodelindex==1):     #Randomemodel
-        #Do nothing
-        timepass=1   # just for fun  :) 
-        print("In Random Model, So no need to use set_weights method "+str(timepass))
+    if(putmodelindex==1):     #Randommodel
+        # Do nothing
+        # In Random Model, So no need to use set_weights method
+        timepass=0   # just for fun  :) 
+        timepass=timepass+1 # just for fun  :)
+        #print("In Random Model, So no need to use set_weights method "+str(timepass))
     elif(putmodelindex==2):    # Pearson
         final = []  
         inp_hidden = []
@@ -311,7 +315,7 @@ def compute_effi(putmodelindex,putfoldername,putcustom,putoptimizer,putactivatio
         final.append(np.array(hidden_op))
         final.append(np.array(op_bias))
         classifier.set_weights(final)
-    elif(putmodelindex==2):    # Pearson ABSOLUTE
+    elif(putmodelindex==3):    # Pearson ABSOLUTE
         final = []  
         inp_hidden = []
         hidden_bias = []
@@ -406,6 +410,8 @@ def compute_effi(putmodelindex,putfoldername,putcustom,putoptimizer,putactivatio
 # parameter  5 for Starting Node
 # parameter  6 for Ending Node
 # parameter  7 for add_epoch_gap
+# parameter  8 for putyear                #    2003 or 2008
+
 import sys
 gotParameters=sys.argv
 cmpindex=int(gotParameters[1])   # 1 for Reliance 2 for Infosys
@@ -466,6 +472,7 @@ for one_epoch in range(Start_Epoch,End_Epoch+add_epoch_gap,add_epoch_gap):
         AllTimeMM=[]
         AllTimeSS=[]
         AllTimeMS=[]
+        AllTimeAllMS=[]
         for one_mc in range(1,10,1):
             one_mc=one_mc/10
             putfold_for_csv,putfoldername,putinnu=GiveFoldersAccordingToCustomChoice(gotcmp,gotmodel,stockname,putcustom,putactivation,putoptimizer,putlr,one_mc,noofsplitinratio,noofbatchsize,one_node,one_epoch)
@@ -487,7 +494,7 @@ for one_epoch in range(Start_Epoch,End_Epoch+add_epoch_gap,add_epoch_gap):
             savemodel(stime,etime,allnu,nu,stockname,onecm,oneeffi,one_node,one_epoch,noofbatchsize,noofsplitinratio)
             final_ma=corel_full_matrix    
             final_ma.to_csv(putfoldername+'relation.csv', float_format='%.05f',sep=',',index=False) 
-            putstr,puth,putm,puts,putmilli=get_run_time(stime,etime)
+            putstr,puth,putm,puts,putmilli,putallmilli=get_run_time(stime,etime)
             #print("\n "+putstr)
             
             
@@ -503,9 +510,10 @@ for one_epoch in range(Start_Epoch,End_Epoch+add_epoch_gap,add_epoch_gap):
             AllTimeMM.append(putm)
             AllTimeSS.append(puts)
             AllTimeMS.append(putmilli)
+            AllTimeAllMS.append(putallmilli)
             
         #print("call save all")
-        saveAllInCSV(gotcmp,gotmodel,one_node,one_epoch,stockname,AllComputedEfficiency,AllComputedPrecision,AllComputedRecall,AllComputedFMeasure,AllTimeHH,AllTimeMM,AllTimeSS,AllTimeMS)
+        saveAllInCSV(gotcmp,gotmodel,one_node,one_epoch,stockname,AllComputedEfficiency,AllComputedPrecision,AllComputedRecall,AllComputedFMeasure,AllTimeHH,AllTimeMM,AllTimeSS,AllTimeMS,AllTimeAllMS)
         
 print("Done-----------Done-------------Done")
 print("--------------------------------------------------------------------------------------")
