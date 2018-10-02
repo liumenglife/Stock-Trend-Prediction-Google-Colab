@@ -120,26 +120,30 @@ def getupdown(dataset):
     ##print(dataset)
     outputfeature=[]
     outputfeature.append(0)
-    
+    tlen=dataset.size
+    p=0
+    n=0 #due to first
     for i in range(1,dataset.size):
         if dataset[i]>=dataset[i-1]:
             outputfeature.append(1)
+            p+=1
         else:
             outputfeature.append(0)
+            n+=1
     print("Output Matrix: ")
     print(np.array(outputfeature).size)
     print("\n")
     ##print(outputfeature)
     #print("\n")
     
-    return outputfeature
+    return outputfeature,tlen,p,n
 
 
 
 
 def compute_mom_ado_fun(datafile):
     #print("\n\n"+datafile+"\n")
-    dataset= pd.read_csv('.//Dataset//'+datafile)
+    dataset= pd.read_csv(datafile)
     filtered_dataset=dataset.iloc[:,3:]
     output_open_price=dataset.iloc[:,4:5]
     output_open_price_dataset=dataset.iloc[:,4:5]
@@ -180,17 +184,18 @@ def compute_mom_ado_fun(datafile):
     ##print(output_open_price_dataset)
     open_price_out=np.array(output_open_price_dataset)
     #getupdown(open_price_out)
-    computed_featureset.append(getupdown(open_price_out))
+    put,tl,p,n=getupdown(open_price_out)
+    computed_featureset.append(put)
     
-    return computed_featureset
+    return computed_featureset,tl,p,n
 
 
 
 
 
 def compute_stockstat(csvfile):
-    dataset=pd.read_csv('.//Dataset//'+csvfile)
-    dataset.columns = ['Symbol','Series','Date','Prev Close','	open','high','low','Last Price','close','Average Price','Total Traded Quantity','Turnover','No. of Trades','Deliverable Qty','% Dly Qt to Traded Qty']
+    dataset=pd.read_csv(csvfile)
+    dataset.columns = ['Symbol','Series','Date','Prev Close','	open','high','low','Last Price','close','Average Price','Total Traded Quantity','	Turnover','No. of Trades','Deliverable Qty','% Dly Qt to Traded Qty']
     stock = StockDataFrame.retype(dataset)    
     
     #-------------------------------------------------------------------
@@ -232,32 +237,75 @@ def compute_stockstat(csvfile):
 #------------------------------------
 #------------------------------------
 #------------------------------------
-yearToStart=2008
+
 #csvfiles=['RELIANCEEQN','INFYEQN','SBINEQN','SUNPHARMAEQN','HDFCEQN','DRREDDYEQN']
 csvfiles=['RELIANCEEQN','INFYEQN','HDFCEQN','DRREDDYEQN']
+#csvfiles=['RELIANCEEQN']
+putyear=2008
+putSplitMode=2  # 1 for 20%, 2 for 50%
 
 #------------------------------------
 #------------------------------------
 #------------------------------------
+
+
+
+
+
+
+
+
+
+if(putSplitMode==1):
+    putper=20
+else:
+    putper=50
+
+
 
 for onecsvfile in csvfiles:
     years=[]
     peryearmax=[]
     peryearmin=[]
+    y=[]
+    ttl=[]
+    tp=[]
+    tn=[]
+    pper=[]
+    nper=[]
+    f=[]
     
-    initial=yearToStart
+    tr=[]
+    te=[]
+    trp=[]
+    trn=[]
+    tep=[]
+    ten=[]
+    
+    ff=[]
+    mm=[]
+    mi=[]
+    initial=putyear
     for i in range(10):
         putstr='01-01-'+str(initial)+'-TO-31-12-'+str(initial)+onecsvfile
         #print(putstr)
+        y.append(initial)
         years.append(putstr)
         initial=initial+1
     
     for year in years:
-        putasmax,putasmin,df,stock=compute_stockstat(year+'.csv')
+        putasmax,putasmin,df,stock=compute_stockstat('Dataset/'+year+'.csv')
         df=df.reset_index()
-        
+        mm.append(putasmax)
+        mi.append(putasmin)
         print(stock.shape)
-        X=compute_mom_ado_fun(year+'.csv')    
+        X,tl,n,p=compute_mom_ado_fun('Dataset/'+year+'.csv')    
+        ttl.append(tl)
+        tp.append(p)
+        tn.append(n)
+        pper.append((p/tl)*100)
+        nper.append((n/tl)*100)
+    		
         X=np.array(X).T
         
         df_mad= pd.DataFrame(X,columns=['Momentum','ADOsc', 'OpenPrice', 'UpDown'])
@@ -270,8 +318,129 @@ for onecsvfile in csvfiles:
         df_result = pd.concat([df, df_mad], axis=1)
         
         df_result=df_result.iloc[10:,:]
-        df_result.to_csv('.//Dataset//'+'computed_feature_'+year+'.csv', sep=',',index=False) 
-print("Done-----------Done-------------Done")
-print("--------------------------------------------------------------------------------------")
-print("--------------------------------------------------------------------------------------")
+        #df_result.to_csv('.//Dataset//computed_feature_'+year+'.csv', sep=',',index=False) 
 
+        
+        if(putSplitMode==1):
+            forwhatsplit=10  # --- > to get 10 % training and 10% testing dataset
+        else:
+            forwhatsplit=2   # --- > to get 50 % training and 50% testing dataset
+            
+        if (tl/forwhatsplit).is_integer():
+            tr.append(tl/forwhatsplit)
+            te.append(tl/forwhatsplit)
+        else:
+            if(putSplitMode==1): # --- > to get 10 % training and 10% testing dataset
+                tl=int(tl/5)
+            intr=int(tl/2)+1
+            inte=tl-intr
+            tr.append(intr)
+            te.append(inte)
+        
+        if (p/forwhatsplit).is_integer():
+            trp.append(p/forwhatsplit)
+            tep.append(p/forwhatsplit)
+        else:
+            if(putSplitMode==1): # --- > to get 10 % training and 10% testing dataset
+                p=int(p/5)
+            intr=int(p/2)+1
+            inte=p-intr
+            trp.append(intr)
+            tep.append(inte)
+        
+        if (n/forwhatsplit).is_integer():
+            trn.append(n/forwhatsplit)
+            ten.append(n/forwhatsplit)
+        else:
+            if(putSplitMode==1): # --- > to get 10 % training and 10% testing dataset
+                n=int(n/5)
+            intr=int(n/2)+1
+            inte=n-intr
+            trn.append(intr)
+            ten.append(inte)
+        
+        
+    
+    y.append('Total')
+    f.append(y)
+    
+    numtp=np.array(tp)
+    total_tp=sum(numtp)
+    tp.append(total_tp)
+    f.append(tp)
+    
+    numpper=np.array(pper)
+    total_pper=sum(numpper)/10
+    pper.append(total_pper)
+    f.append(pper)
+    
+    numtn=np.array(tn)
+    total_tn=sum(numtn)
+    tn.append(total_tn)
+    f.append(tn)
+    
+    numnper=np.array(nper)
+    total_nper=sum(numnper)/10
+    nper.append(total_nper)
+    f.append(nper)
+    
+    numttl=np.array(ttl)
+    total_ttl=sum(numttl)
+    ttl.append(total_ttl)
+    f.append(ttl)
+    
+    
+    
+    
+    print(['Total',total_tp,total_pper,total_tn,total_nper,total_ttl])
+    
+    f=np.array(f).T
+    
+    df_f= pd.DataFrame(f,columns=['Year', 'Increase', '%Increase','Decrease','%Decrease','Total'])
+    df_f.to_csv('.//Dataset_Statistics//'+onecsvfile+'_'+str(putyear)+'_OverallYear_Increse_decrese_in_'+str(putper)+'_percent_Training_and_Holdout.csv', float_format='%.2f',sep=',',index=False) 
+    
+    
+    ff=f
+    
+    f=[]
+    f.append(y)
+    
+    
+    numtrp=np.array(trp)
+    total_trp=sum(numtrp)
+    trp.append(total_trp)
+    f.append(trp)
+    
+    numtrn=np.array(trn)
+    total_trn=sum(numtrn)
+    trn.append(total_trn)
+    f.append(trn)
+    
+    numtr=np.array(tr)
+    total_tr=sum(numtr)
+    tr.append(total_tr)
+    f.append(tr)
+    
+    numtep=np.array(tep)
+    total_tep=sum(numtep)
+    tep.append(total_tep)
+    f.append(tep)
+    
+    numten=np.array(ten)
+    total_ten=sum(numten)
+    ten.append(total_ten)
+    f.append(ten)
+    
+    numte=np.array(te)
+    total_te=sum(numte)
+    te.append(total_te)
+    f.append(te)
+    
+    f=np.array(f).T
+    df_f= pd.DataFrame(f,columns=['Year', 'Increase', 'Decrease','Total', 'Increase', 'Decrease','Total'])
+    df_f.to_csv('.//Dataset_Statistics//'+onecsvfile+'_'+str(putyear)+'_Split_in_'+str(putper)+'_percent_Training_and_Holdout.csv', float_format='%.01f',sep=',',index=False) 
+    
+    
+    print("Done-----------Done-------------Done")
+    print("--------------------------------------------------------------------------------------")
+    print("--------------------------------------------------------------------------------------")

@@ -12,18 +12,34 @@ import pandas as pd
 maxx = []
 minn = []
 
+
+############################
+############################
+############################
+
+putyear=2008
+cmpindex=1
+cmplist=['','RELIANCEEQN','INFYEQN','SBINEQN','SUNPHARMAEQN','HDFCEQN','DRREDDYEQN']
+putcmp=cmplist[cmpindex]
+
+############################
+############################
+############################
+
+
+
+
+
 for i in range(11):
     maxx.append(0);
     minn.append(100000000)
 
-
-for yrs in range(2003, 2013):
     
+for yrs in range(putyear, putyear+10):
     lmin_col = []
     lmax_col = []
-    
-    with open('computed_feature_data_'+str(yrs)+'.csv', "r") as f_input:
-        
+
+    with open('Dataset/computed_feature_01-01-'+str(yrs)+'-TO-31-12-'+str(yrs)+putcmp+'.csv', "r") as f_input:
         reader = csv.reader(f_input)
         next(reader)
         
@@ -72,8 +88,11 @@ c11 = []
 
 rows = []
 
-for yrs in range(2003, 2013):
-    with open('computed_feature_data_'+str(yrs)+'.csv', "r") as f_input:
+
+
+
+for yrs in range(putyear, putyear+10):
+    with open('Dataset/computed_feature_01-01-'+str(yrs)+'-TO-31-12-'+str(yrs)+putcmp+'.csv', "r") as f_input:
         reader = csv.reader(f_input)
         next(reader)
         for row in reader:
@@ -140,7 +159,9 @@ final.append(std)
 
 X=final  
 X=np.array(X).T
+
+
+#putindex=headSTR.split(' ')
         
-df_mad= pd.DataFrame(X,columns=['Max','Min', 'Mean', 'StandardDevisation'])
-df_mad.to_csv('getMinMaxForAllFeatures.csv', sep=',',index=False) 
-    
+df_mad= pd.DataFrame(X,columns=['Max','Min', 'Mean', 'StandardDeviation'])
+df_mad.to_csv('got_MinMax_For_'+putcmp+'_'+str(putyear)+'.csv', sep=',') 
