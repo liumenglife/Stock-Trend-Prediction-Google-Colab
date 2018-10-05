@@ -15,13 +15,13 @@ import pandas as pd
 def compute_all_results(mode,noofepoch,noofnode,fold):
     All_final=0
     for i in range(len(noofepoch)):        
-        print(noofnode[i])
+        #print(noofnode[i])
         if(mode==0):
             putpath=fold+'\Results\Epoch_'+str(noofepoch[i])+'\\Nodes_'+str(noofnode[0])+'\\Nodes_'+str(noofnode[0])+'_Epoch_'+str(noofepoch[i])+'_All_Efficiency_Of_Training.csv'
         elif(mode==1):
             putpath=fold+'\Results\Epoch_'+str(noofepoch[i])+'\\Nodes_'+str(noofnode[0])+'\\Nodes_'+str(noofnode[0])+'_Epoch_'+str(noofepoch[i])+'_All_Efficiency_Of_Testing.csv'
         
-        print(putpath)
+        #print(putpath)
         df=pd.read_csv(putpath)
         #print(df)
         final=df.iloc[0:1,:]
@@ -81,9 +81,9 @@ noofepoch=[1000,2000,3000,4000,5000,6000,7000,8000,9000,10000]
 getTop=5
 mode=1    # MODE 0 FOR Training # MODE 1 FOR Testing #  MODE 2 FOR AVG   
 putnode=10
-modelindex=1    # 1 for random weights 2 for pearson 3 for pearson absolute 
-cmpindex=4
-putyear=2003    ## 2003 or 2008
+modelindex=3    # 1 for random weights 2 for pearson 3 for pearson absolute 
+cmpindex=6
+putyear=2008    ## 2003 or 2008
 #-------------------------------------------
 #-------------------------------------------
 putcmp=['','Reliance','Infosys','SBI','SunPharma','HDFC','DrReddy']   # Reliance, Infosy
